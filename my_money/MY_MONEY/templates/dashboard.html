@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+ <html lang="pt">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard - MY_MONEY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+ </head>
+
+ <body class="bg-light">
+
+  <a href="/configuracao" class="settings-icon text-dark configuracao-icon" title="Configurações">⚙️</a>
+
+  <a href="/logout" class="settings-icon text-danger ms-3" title="Sair">🚪</a>
+ <div class="container mt-5">
+  <div class="text-center mb-4">
+  <h2 class="text-success fw-bold">💰 MY_MONEY</h2>
+  <p class="lead">Você está logado como <span id="userEmail" class="fw-bold text-success"></span></p>
+  </div>
+
+  <div class="row">
+  <div class="col-md-4">
+  <div class="card shadow-sm p-3 mb-4" id="cardResumoGeral"> {# Adicionado ID para facilitar manipulação no JS #}
+  <h5 class="text-center">
+  Resultado - <span id="tituloPeriodo">{{ titulo_mes }}</span> {# Adicionado span para atualizar o título do período #}
+  <div class="btn-group btn-group-sm float-end" role="group">
+  <button type="button" class="btn btn-outline-secondary filtro-periodo" data-periodo="semana">Semana</button>
+  <button type="button" class="btn btn-secondary filtro-periodo active" data-periodo="mes">Mês</button>
+  <button type="button" class="btn btn-outline-secondary filtro-periodo" data-periodo="ano">Ano</button>
+  </div>
+  </h5>
+  <ul class="list-unstyled text-center" id="listaResumoGeral"> {# Adicionado ID para facilitar manipulação no JS #}
+      {# Estes itens serão atualizados pelo JavaScript com os dados do período selecionado #}
+      <li id="liEntradas">
+          <strong class="text-success">Entradas:</strong>
+          <span id="resumoEntradas">R$ 0,00</span>
+      </li>
+      <li id="liSaidas">
+          <strong class="text-danger">Saídas:</strong>
+          <span id="resumoSaidas">R$ 0,00</span>
+      </li>
+      <li id="liSaldo">
+          <strong class="text-info">Saldo:</strong>
+          <span id="resumoSaldo">R$ 0,00</span>
+      </li>
+  </ul>
+
+  {# Nova seção para Resumo Total Acumulado #}
+  <ul class="list-unstyled text-center mt-3 border-top pt-3" id="listaResumoAcumulado"> {# Adicionado ID e estilo para separar #}
+      <h6>Resumo Total Acumulado</h6>
+      <li>
+          <strong class="text-success">Entradas:</strong>
+          <span id="resumoTotalEntradas">R$ 0,00</span>
+      </li>
+      <li>
+          <strong class="text-danger">Saídas:</strong>
+          <span id="resumoTotalSaidas">R$ 0,00</span>
+      </li>
+      <li>
+          <strong class="text-info">Saldo:</strong>
+          <span id="resumoTotalSaldo">R$ 0,00</span>
+      </li>
+  </ul>
+  {# Fim da nova seção #}
+
+  </div>
+  </div>
+
+  <div class="col-md-8">
+  <div class="card p-4 shadow">
+  <h5 class="text-center">Distribuição Financeira (Saídas por Categoria) - <span id="tituloGraficoPizzaPeriodo">Mês</span></h5> {# Adicionado span para título #}
+  <canvas id="graficoPizza" width="220" height="160" style="max-width: 100%; margin: auto;"></canvas>
+  </div>
+  </div>
+  </div>
+
+  <div class="row">
+  <div class="col-md-12">
+  <div class="card p-4 shadow mb-4">
+  <h5 class="text-center">Entradas e Saídas por Período - <span id="tituloGraficoMensalPeriodo">Mensal</span></h5> {# Adicionado span para título #}
+  <canvas id="graficoMensal" height="120"></canvas>
+  </div>
+  </div>
+  </div>
+
+  
+
+  <div class="text-center mt-4">
+  <a href="/extrato" class="btn btn-primary">Ver Extrato Completo</a>
+  </div>
+ </div>
+
+
+ <button class="btn btn-success floating-button" data-bs-toggle="modal" data-bs-target="#inserirModal">+</button>
+
+ <div class="modal fade" id="inserirModal" tabindex="-1" aria-labelledby="inserirModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-content p-3">
+  <div class="modal-header">
+  <h5 class="modal-title">Adicionar Movimento</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+  </div>
+  <div class="modal-body">
+  <div class="d-grid">
+  <button class="btn btn-success" data-bs-toggle="collapse" data-bs-target="#formEntrada">➕ Entrada</button>
+  <button class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#formSaida">➖ Saída</button>
+
+  </div>
+
+  <form id="formEntrada" class="collapse mt-3" method="POST" action="/salvar_lancamento">
+  <input type="hidden" name="tipo" value="entrada">
+
+  <select class="form-control mb-2" name="categoria" required>
+  <option value="" disabled selected>Selecione uma categoria</option>
+  {% for cat in categorias if cat[2] == 'entrada' %}
+  <option value="{{ cat[0] }}">{{ cat[1] }}</option>
+  {% endfor %}
+  </select>
+
+  <input type="text" class="form-control mb-2" placeholder="Produto ou Serviço" name="produto_servico">
+
+  <select class="form-control mb-2" name="tipo_conta" required>
+  <option value="" disabled selected>Selecione o tipo de conta</option>
+  {% for tipo in tipos_pagamento %}
+  <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
+  {% endfor %}
+  </select>
+
+  <input type="number" class="form-control mb-2" placeholder="Valor (R$)" name="valor" step="0.01"> {# Adicionado step para valores decimais #}
+  <input type="date" class="form-control mb-2" name="data">
+  <textarea class="form-control mb-2" rows="2" placeholder="Descrição" name="descricao"></textarea>
+
+  <div class="text-end">
+  <button type="submit" class="btn btn-success">Salvar</button>
+  </div>
+  </form>
+
+  <form id="formSaida" class="collapse mt-3" method="POST" action="/salvar_lancamento">
+  <input type="hidden" name="tipo" value="saida">
+
+  <select class="form-control mb-2" name="categoria" required>
+  <option value="" disabled selected>Selecione uma categoria</option>
+  {% for cat in categorias if cat[2] == 'saida' %}
+  <option value="{{ cat[0] }}">{{ cat[1] }}</option>
+  {% endfor %}
+  </select>
+
+  <input type="text" class="form-control mb-2" placeholder="Produto ou Serviço" name="produto_servico">
+
+  <select class="form-control mb-2" name="tipo_conta" required>
+  <option value="" disabled selected>Selecione o tipo de conta</option>
+  {% for tipo in tipos_pagamento %}
+  <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
+  {% endfor %}
+  </select>
+
+  <input type="number" class="form-control mb-2" placeholder="Valor (R$)" name="valor" step="0.01"> {# Adicionado step para valores decimais #}
+  <input type="date" class="form-control mb-2" name="data">
+  <textarea class="form-control mb-2" rows="2" placeholder="Descrição" name="descricao"></textarea>
+
+  <div class="text-end">
+  <button type="submit" class="btn btn-danger">Salvar</button>
+  </div>
+  </form>
+  </div>
+  </div>
+  </div>
+ </div>
+ <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="toastSucesso" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+  <div class="toast-body">
+  Lançamento salvo com sucesso!
+  </div>
+  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+  </div>
+  </div>
+ </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+ 
+  <script>
+   const dadosCategorias = JSON.parse('{{ dados_por_categoria | tojson | safe }}'); // Manter se ainda usar no JS
+   </script>
+ 
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+ </body>
+ </html>

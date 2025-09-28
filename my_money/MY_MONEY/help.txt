@@ -1,0 +1,19 @@
+
+####Linux#######
+Criar o ambiente virtual (caso ainda não tenha)
+"python3 -m venv venv"
+
+Ativar o venv
+source venv/bin/activate
+
+Para sair
+deactivate
+
+
+######windows################
+venv\Scripts\activate
+
+
+
+
+git pull origin main 

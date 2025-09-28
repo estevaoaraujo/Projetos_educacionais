@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | MY MONEY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
+
+    <div class="card p-4 shadow text-center" style="width: 400px;">
+        <!-- ✅ Logo -->
+        <img src="{{ url_for('static', filename='img/logo.png') }}" 
+             alt="Logo MY MONEY" 
+             class="img-fluid mb-3 mx-auto" 
+             style="max-height: 180px; object-fit: contain;">
+
+        <!-- ✅ Título -->
+        <h3 class="mb-3 text-success">Login</h3>
+
+        <!-- ✅ Formulário padrão sem JS -->
+        <form method="POST" action="/login">
+            <div class="mb-3 text-start">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="Digite seu email" required>
+            </div>
+            <div class="mb-3 text-start">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" id="senha" name="senha" class="form-control" placeholder="Digite sua senha" required minlength="6">
+            </div>
+            <button type="submit" class="btn btn-success w-100">Entrar</button>
+        </form>
+
+        <!-- ✅ Mensagens com Flask flash() -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="text-{{ category }} mt-2">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- ✅ Link de cadastro -->
+        <div class="mt-3">
+            <a href="{{ url_for('login_route.cadastro_page') }}" class="text-primary">Cadastrar usuário</a>
+
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+

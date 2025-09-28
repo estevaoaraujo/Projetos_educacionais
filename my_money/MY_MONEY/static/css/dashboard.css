@@ -1,0 +1,107 @@
+.floating-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+  
+  .settings-icon {
+    font-size: 36px;
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    z-index: 1000;
+  }
+  
+  .configuracao-icon {
+    font-size: 36px;
+    position: fixed;
+    top: 20px;
+    left: 30px;
+    right: auto;
+    z-index: 1000;
+  }
+  
+  .modal-body .d-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .btn-toggle-entry {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+  /* Ajustes de layout */
+  .container.mt-5 {
+    margin-top: 2rem !important;
+  }
+  
+  .card.shadow-sm,
+  .card.shadow {
+    margin-bottom: 1.5rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  /* Cartão de Resultado */
+  .btn-group.btn-group-sm {
+    float: right;
+  }
+  
+  .btn-group.btn-group-sm .btn {
+    margin-left: 0.25rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .list-unstyled.text-center {
+    margin-bottom: 0;
+  }
+  
+  .list-unstyled.text-center li {
+    line-height: 1.2;
+  }
+  
+  /* Tabela de Lançamentos */
+  #tabelaLancamentos th,
+  #tabelaLancamentos td {
+    padding: 0.5rem;
+    vertical-align: middle;
+  }
+  
+  #tabelaLancamentos thead th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  /* Paginação */
+  #paginacao a {
+    padding: 0.25rem 0.5rem;
+    margin: 0 0.1rem;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  #paginacao a.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+  
+  /* Gráficos */
+  #graficoPizza,
+  #graficoMensal {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 300px;
+  }
+  

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuração - MY_MONEY</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+  <h2 class="text-center mb-4 text-primary">⚙️ Configurações do Sistema</h2>
+
+  <div class="row">
+    <!-- Cadastro de Categorias -->
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white">Cadastro de Categorias</div>
+        <div class="card-body">
+            <form method="POST" action="/salvar_categoria">
+                <div class="mb-3">
+                  <label for="categoria" class="form-label">Nome da Categoria</label>
+                  <input type="text" class="form-control" id="categoria" name="nome_categoria" placeholder="Ex: Alimentação, Lazer">
+                </div>
+                <div class="mb-3">
+                  <label for="tipo_categoria" class="form-label">Tipo da Categoria</label>
+                  <select class="form-select" id="tipo_categoria" name="tipo_categoria" required>
+                    <option value="entrada">Entrada</option>
+                    <option value="saida">Saída</option>
+                  </select>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <button type="submit" class="btn btn-success">Salvar Categoria</button>
+                </div>
+              </form>
+              
+
+          {% if categorias %}
+          <hr>
+          <h6 class="mt-3">Editar Categorias Existentes</h6>
+          <table class="table table-bordered mt-2">
+            <thead>
+              <tr>
+                <th>Categoria</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cat in categorias %}
+              <tr>
+                <form method="POST" action="/atualizar_categoria">
+                  <td>
+                    <input type="hidden" name="id_categoria" value="{{ cat[0] }}">
+                    <input type="text" name="novo_nome" value="{{ cat[1] }}" class="form-control">
+                  </td>
+                  <td class="d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-primary">Salvar</button>
+                  </form>
+                  
+                  <form method="POST" action="/excluir_categoria">
+                    <input type="hidden" name="id_categoria" value="{{ cat[0] }}">
+                    <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                  </form>
+                  </td>
+                  
+                </form>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Cadastro de Tipo de Pagamento -->
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">Cadastro de Tipo de Pagamento</div>
+        <div class="card-body">
+          <form method="POST" action="/salvar_tipo_pagamento">
+            <div class="mb-3">
+              <label for="tipoPagamento" class="form-label">Tipo de Pagamento</label>
+              <input type="text" class="form-control" id="tipoPagamento" name="tipo_pagamento" placeholder="Ex: Cartão de Crédito, Pix, Boleto">
+            </div>
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">Salvar Tipo</button>
+            </div>
+          </form>
+
+          {% if tipos_pagamento %}
+          <hr>
+          <h6 class="mt-3">Editar Tipos de Pagamento</h6>
+          <table class="table table-bordered mt-2">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tipo in tipos_pagamento %}
+              <tr>
+                <form method="POST" action="/atualizar_tipo_pagamento">
+                  <td>
+                    <input type="hidden" name="id_tipo" value="{{ tipo[0] }}">
+                    <input type="text" name="novo_tipo" value="{{ tipo[1] }}" class="form-control">
+                  </td>
+                  <td class="d-flex gap-2">
+                    <button type="submit" class="btn btn-sm btn-primary">Salvar</button>
+                  </form>
+                  
+                  <form method="POST" action="/excluir_tipo_pagamento">
+                    <input type="hidden" name="id_tipo" value="{{ tipo[0] }}">
+                    <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                  </form>
+                  </td>
+                  
+                </form>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botão Voltar -->
+  <div class="text-center mt-4">
+    <a href="/dashboard" class="btn btn-secondary">Voltar para Início</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
